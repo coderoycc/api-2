@@ -1,32 +1,16 @@
 import { Router } from "express";
+import * as ControllerFila from '../controllers/fila.controller.js'
 
 const router = Router();
 
-router.get("/fila/:id", (req, res) => {
-  // Mostramos una sola fila
-  const { id } = req.params;
-  res.send(`Recibido ${id}`);
-});
+router.get("/fila/:id", ControllerFila.getFila);
 
-router.get("/fila", (req, res) => {
-  //Mostramos todas las filas
-});
+router.get("/fila", ControllerFila.getFilas);
 
-router.post("/fila", (req, res) => {
-  // Insertamos una nueva fila { fecha, objeto }
-  const data = req.body;
-  res.json({
-    msg: "Recibido",
-    ...data,
-  });
-});
+router.post("/fila", ControllerFila.createFila);
 
 // No se puede editar una fila
 
-router.delete("/fila/:id", (req, res) => {
-  // Eliminamos una fila
-  const { id } = req.params;
-  res.send(`Recibido ${id}`);
-});
+router.delete("/fila/:id", ControllerFila.deleteFila);
 
 export default router;
