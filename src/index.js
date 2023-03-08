@@ -4,6 +4,7 @@ import { pool } from "./db/db.js";
 dotenv.config();
 
 import DigitalRoutes from "./routes/ciudadanos.routes.js";
+import FichaRoutes from "./routes/ficha.routes.js";
 const app = express();
 
 app.use(express.text());
@@ -18,6 +19,8 @@ app.get("/ping", async (req, res) => {
 });
 
 app.use(DigitalRoutes);
+app.use(FichaRoutes);
+
 
 app.listen(process.env.PORT);
 console.log("Server on port", process.env.PORT);
