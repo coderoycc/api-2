@@ -5,6 +5,8 @@ dotenv.config();
 
 import DigitalRoutes from "./routes/ciudadanos.routes.js";
 import FichaRoutes from "./routes/ficha.routes.js";
+import FilaRoutes from "./routes/fila.routes.js"; 
+
 const app = express();
 
 app.use(express.text());
@@ -20,7 +22,7 @@ app.get("/ping", async (req, res) => {
 
 app.use(DigitalRoutes);
 app.use(FichaRoutes);
-
+app.use(FilaRoutes);
 
 app.listen(process.env.PORT);
 console.log("Server on port", process.env.PORT);
