@@ -19,3 +19,12 @@ create table dia_fila(
 ) charset=utf8;
 
 
+create table ficha(
+  id_ficha varchar(8) not null,
+  ci int(10) not null,
+  id_dia int(5) not null,
+  estado char(1),
+  primary key(id_ficha),
+  foreign key ci references ciudadano(ci),
+  foreign key id_dia references dia_fila(id_dia)
+) charset=utf8;
