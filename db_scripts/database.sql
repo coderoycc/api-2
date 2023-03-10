@@ -2,29 +2,32 @@ create database if not exists companydb;
 
 use companydb;
 
-create table ciudadano(
+create table user(
   ci int(10) not null,
-  nombre varchar(45),
-  apellido varchar(55),
-  fecha_nac date,
-  est_civil varchar(20) default null
-  constraint pk_ci primary key (ci)
+  name varchar(90),
+  birth_date date,
+  primary key (ci)
 ) charset=utf8;
 
-create table dia_fila(
-  id_dia int(5) not null AUTO_INCREMENT, 
-  objeto varchar(60) not null,
-  fecha date not null,
+create table service(
+  id_serv int(3) not null AUTO_INCREMENT, 
+  descrip varchar(60) not null,
   primary key(id_dia)
 ) charset=utf8;
 
 
-create table ficha(
-  id_ficha varchar(8) not null,
+create table queue(
+  id_q int(3) not null AUTO_INCREMENT,
+  quantity int not null,
+  date_q date not null,
+  id_serv int(3) not null,
+  primary key(id_q),
+  foreign key id_serv references service(id_serv)
+) charset=utf8;
+
+create table token(
   ci int(10) not null,
-  id_dia int(5) not null,
-  estado char(1),
-  primary key(id_ficha),
-  foreign key ci references ciudadano(ci),
-  foreign key id_dia references dia_fila(id_dia)
+  id_q int(3) not null,
+  nro int not null,
+  primary key(ci, id_q) references user(ci) queue(id_q); 
 ) charset=utf8;

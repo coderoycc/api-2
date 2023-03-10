@@ -1,17 +1,17 @@
 import { pool } from "../db/db.js";
 
-export const getCiudadano = (req, res) => {
+export const getUser = (req, res) => {
   // Mostrar uno
   const { ci } = req.params;
   console.log(ci);
   res.send("Recibido");
 };
 
-export const getCiudadanos = (req, res) => {
+export const getUsers = (req, res) => {
   // Mostrar todos
 };
 
-export const createCiuadano = async (req, res) => {
+export const createUser = async (req, res) => {
   // recibimos en el body {ci, nombre, apellido, fecha_nac, est_civil} DEBEN ESTAR TODOS LOS VALORES
   // Fecha del tipo YYYY-MM-DD
   const data = req.body;
@@ -25,13 +25,13 @@ export const createCiuadano = async (req, res) => {
   res.status(406).send('ERROR: Datos incompatibles')
 };
 
-export const updateCiudadano = (req, res) => {
+export const updateUser = (req, res) => {
   // Editar con ci por parametro
   const { ci } = req.params;
   res.send(`Se actualizó al usuario con CI ${ci}`);
 };
 
-export const deleteCiudadano = (req, res) => {
+export const deleteUser = (req, res) => {
   const { ci } = req.params;
   res.send(`Se eliminó al usuario con CI ${ci}`);
 };
