@@ -1,37 +1,74 @@
 import { pool } from "../db/db.js";
 
-export const getUser = (req, res) => {
+export const getUser = async (req, res) => {
   // Mostrar uno
   const { ci } = req.params;
-  console.log(ci);
-  res.send("Recibido");
+  const [rows] = await pool.query(`SELECT * FROM user WHERE ci = ${ci}`);
+  if (rows.length != 0) {
+    return res.send(rows[0]);
+  }
+  res.status(400).send({ msg: `Usuario con ${ci} no encontrado` });
 };
 
-export const getUsers = (req, res) => {
-  // Mostrar todos
+export const getUsers = async (req, res) => {
+  const [rows] = await pool.query("SELECT * FROM user");
+  res.status(200).send(rows);
 };
 
 export const createUser = async (req, res) => {
-  // recibimos en el body {ci, nombre, apellido, fecha_nac, est_civil} DEBEN ESTAR TODOS LOS VALORES
+  // recibimos en el body {ci, nombre comp, fecha_nac} DEBEN ESTAR TODOS LOS VALORES
   // Fecha del tipo YYYY-MM-DD
   const data = req.body;
-  if(Object.keys(data).length == 5){
-    const [rows] = await pool.query('INSERT INTO ciudadano values(?,?,?,?,?)', [Number(data.ci),data.nombre, data.apellido, data.fecha_nac, data.est_civil])
+  if (Object.keys(data).length == 3) {
+    const [rows] = await pool.query("INSERT INTO user values(?,?,?)", [
+      Number(data.ci),
+      data.name,
+      data.birth_date,
+    ]);
     return res.send({
-      msg:"INSERTADO OK",
-      ...rows
+      msg: "INSERTED USER",
+      ...rows,
     });
   }
-  res.status(406).send('ERROR: Datos incompatibles')
+  res.status(406).send("ERROR: Datos incompatibles");
 };
 
-export const updateUser = (req, res) => {
+export const updateUser = async (req, res) => {
   // Editar con ci por parametro
   const { ci } = req.params;
-  res.send(`Se actualizó al usuario con CI ${ci}`);
+  const { body } = req;
+  const uString = updateString(body);
+  let query = `UPDATE user SET ${uString.join(',')} WHERE ci = ${ci}`;
+  const result = await pool.query(query);
+  if(result[0].affectedRows==1){
+    return res.status(200).send({
+      msg:`User with CI ${ci} has been updated`,
+      ...result[0]
+    })
+  }
+  res.status(406).send({
+    msg:`User with CI ${ci} not updated`
+  });
 };
 
-export const deleteUser = (req, res) => {
+export const deleteUser = async (req, res) => {
   const { ci } = req.params;
-  res.send(`Se eliminó al usuario con CI ${ci}`);
+  const result = await pool.query(`DELETE FROM user WHERE ci = ${ci};`);
+  if(result[0].affectedRows == 1){
+    return res.send({
+      msg:`USER with CI ${ci} has been deleted`,
+      ...result[0]
+    })
+  }
+  res.send({
+    msg:`USER with CI ${ci} not deleted`
+  });
 };
+
+function updateString(obj){
+  let arrString = []
+  for(const x in obj){
+    arrString.push(`${x}="${obj[x]}"`);
+  }
+  return arrString;
+}
