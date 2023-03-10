@@ -7,11 +7,11 @@ export const getUser = async (req, res) => {
   if (rows.length != 0) {
     return res.send(rows[0]);
   }
-  res.status(400).send({ msg: `Usuario con ${ci} no encontrado` });
+  res.status(400).send({ msg: `User with CI ${ci} not found` });
 };
 
 export const getUsers = async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM user");
+  const [rows] = await pool.query("SELECT * FROM ");
   res.status(200).send(rows);
 };
 

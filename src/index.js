@@ -4,6 +4,7 @@ import { pool } from "./db/db.js";
 dotenv.config();
 
 import UserRoutes from './routes/user.routes.js';
+import ServiceRoutes from './routes/service.routes.js';
 import FichaRoutes from "./routes/ficha.routes.js";
 import FilaRoutes from "./routes/fila.routes.js"; 
 
@@ -21,7 +22,7 @@ app.get("/ping", async (req, res) => {
 });
 
 app.use(UserRoutes);
-
+app.use(ServiceRoutes);
 app.use(FichaRoutes);
 app.use(FilaRoutes);
 
