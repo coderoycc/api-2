@@ -29,8 +29,13 @@ create table token(
   ci int(10) not null,
   id_q int(3) not null,
   nro int not null,
-  primary key(ci, id_q) references user(ci) queue(id_q); 
+  status varchar(1) not null,
+  foreign key (ci) references user(ci),
+  foreign key (id_q) referneces queue(id_q),
+  primary key(ci, id_q) 
 ) charset=UTF8MB4;
+-- status values A: Attended, E: Expecting
+
 
 -- Creación del TRIGGER que actualiza la cantidad de la cola
 CREATE TRIGGER updateNumQueue
