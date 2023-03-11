@@ -5,8 +5,8 @@ dotenv.config();
 
 import UserRoutes from './routes/user.routes.js';
 import ServiceRoutes from './routes/service.routes.js';
-import FichaRoutes from "./routes/ficha.routes.js";
 import QueueRoutes from "./routes/queue.routes.js"; 
+import TokenRoutes from "./routes/token.routes.js";
 
 const app = express();
 
@@ -24,7 +24,7 @@ app.get("/ping", async (req, res) => {
 app.use(UserRoutes);
 app.use(ServiceRoutes);
 app.use(QueueRoutes);
-app.use(FichaRoutes);
+app.use(TokenRoutes);
 
 app.listen(process.env.PORT);
 console.log("Server on port", process.env.PORT);
