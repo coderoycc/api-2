@@ -1,67 +1,74 @@
 import { pool } from "../db/db.js";
-
+import createError from "http-errors";
+import { Response } from "../common/response.js";
 export const getService = async (req, res) => {
   // Mostrar uno
   const { id } = req.params;
-  const [rows] = await pool.query(
-    `SELECT * FROM service WHERE id_serv = ${id}`
-  );
-  if (rows.length != 0) {
-    return res.send(rows[0]);
+  try {
+    const [rows] = await pool.query(
+      `SELECT * FROM service WHERE id_serv = ${id}`
+    );
+    if (rows.length != 0) {
+      return Response.success(res, 200, "Result query Service ID", rows[0]);
+    } else {
+      throw new createError.NotFound(`Service with ID ${id} not found`);
+    }
+  } catch (error) {
+    Response.error(res, error);
   }
-  res.status(400).send({ msg: `Service with ID ${id} not found` });
 };
 
 export const getServices = async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM service");
-  res.status(200).send(rows);
+  try {
+    const [rows] = await pool.query("SELECT * FROM service");
+    Response.success(res, 200, "List Services", rows);
+  } catch (error) {
+    Response.error(res);
+  }
 };
 
 export const createService = async (req, res) => {
   // recibimos en el body {descrip}
   const data = req.body;
-  if (Object.keys(data).length == 1) {
-    const [rows] = await pool.query("INSERT INTO service(descrip) values(?)", [
-      data.descrip,
-    ]);
-    return res.send({
-      msg: "INSERTED Service",
-      ...rows,
-    });
+  try {
+    if (Object.keys(data).length == 1) {
+      const [rows] = await pool.query(
+        "INSERT INTO service(descrip) values(?)",
+        [data.descrip]
+      );
+      return Response.success(res, 200, "Inserted Service", rows);
+    } else {
+      throw new createError.BadRequest(`Missing data: Service no inserted`);
+    }
+  } catch (error) {
+    Response.error(res, error);
   }
-  res.status(406).send({ msg: "ERROR: No Inserted" });
 };
 
 export const updateService = async (req, res) => {
   // Editar con id por parametro (en body "descrip")
   const { id } = req.params;
   const { body } = req;
-  if (body.descrip) {
-    const query = `UPDATE service SET descrip="${body.descrip}" WHERE id_serv = ${id}`;
-    const result = await pool.query(query);
-    if (result[0].affectedRows == 1) {
-      return res.status(200).send({
-        msg: `Service with ID ${id} has been updated`,
-        ...result[0],
-      });
+  try {
+    if (body.descrip) {
+      const query = `UPDATE service SET descrip="${body.descrip}" WHERE id_serv = ${id}`;
+      const result = await pool.query(query);
+      if (result[0].affectedRows == 1) {
+        return Response.success(res, 200, `Service with ID ${id} has been updated`, result[0])
+      }else{
+        throw new createError.NotFound(`No Updated service with ID ${id} Not found`);
+      }
+    } else {
+      throw new createError.BadRequest("ERROR: Send *descrip* in the request BODY");
     }
-  } else {
-    return res.send({
-      msg: "ERROR: Send *descrip* in the request BODY",
-    });
+  } catch (error) {
+    Response.error(res, error);
   }
-  res.status(406).send({
-    msg: `Service with ID ${ci} not updated, because it does NOT EXIST`,
-  });
 };
 
 /**
  * No se puede eliminar, por posible violación de integridad referencial
  */
 export const deleteService = (req, res) => {
-  res.status(200).json({
-    status: "OK",
-    msg: "It is not possible to delete records due to referential integrity issues.",
-    tip: "Contact the administrator",
-  });
+  Response.error(res, new createError.Conflict("It is not possible to delete records due to referential integrity issues."));
 };

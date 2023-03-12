@@ -2,7 +2,7 @@
 // Estructurar los datos al responder
 import createError from 'http-errors'; //gestionamos errores
 
-module.exports.Response = {
+export const Response = {
   success: (res, status=200, message='OK', body={}) => {
     //correcto
     res.status(status).json({message, body})
