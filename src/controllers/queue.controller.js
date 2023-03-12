@@ -1,10 +1,11 @@
 import { pool } from "../db/db.js";
+import { Response } from "../common/response.js";
 
 export const getQueue = async (req, res) => {
   const { id } = req.params;
   const [row] = await pool.query(`SELECT * FROM queue WHERE id_q = ${id};`);
   if (row.length != 0) {
-    return res.send(row[0]);
+    return Response.success(res, '', row[0]);
   }
   res.status(400).send({ msg: `Not Found Queue with ID ${id}` });
 };
@@ -38,13 +39,13 @@ export const createQueue = async (req, res) => {
 export const deleteQueue = async (req, res) => {
   const { id } = req.params;
   const result = await pool.query(`DELETE FROM queue WHERE id_q = ${id};`);
-  if(result[0].affectedRows == 1){
+  if (result[0].affectedRows == 1) {
     return res.send({
-      msg:`Queue with ID ${id} has been deleted`,
-      ...result[0]
-    })
+      msg: `Queue with ID ${id} has been deleted`,
+      ...result[0],
+    });
   }
   res.send({
-    msg:`Queue with ID ${id} not deleted, because it does NOT EXIST`
+    msg: `Queue with ID ${id} not deleted, because it does NOT EXIST`,
   });
 };

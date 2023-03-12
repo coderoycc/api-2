@@ -21,10 +21,10 @@ app.get("/ping", async (req, res) => {
   res.json(result);
 });
 
-app.use(UserRoutes);
-app.use(ServiceRoutes);
-app.use(QueueRoutes);
-app.use(TokenRoutes);
+app.use('/api', UserRoutes);
+app.use('/api', ServiceRoutes);
+app.use('/api',QueueRoutes);
+app.use('/api', TokenRoutes);
 
 app.listen(process.env.PORT);
 console.log("Server on port", process.env.PORT);

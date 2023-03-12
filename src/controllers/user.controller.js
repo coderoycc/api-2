@@ -11,7 +11,7 @@ export const getUser = async (req, res) => {
 };
 
 export const getUsers = async (req, res) => {
-  const [rows] = await pool.query("SELECT * FROM ");
+  const [rows] = await pool.query("SELECT * FROM user;");
   res.status(200).send(rows);
 };
 
@@ -65,6 +65,9 @@ export const deleteUser = async (req, res) => {
   });
 };
 
+/**
+ * Crea una cadena para la consulta
+ */
 function updateString(obj){
   let arrString = []
   for(const x in obj){
@@ -72,3 +75,10 @@ function updateString(obj){
   }
   return arrString;
 }
+
+
+/**
+ * Para hacer una actualización parcial se puede usar PATCH 
+ * La consulta sería de la siguiente manera
+ * pool.query('UPDATE user SET name = IFNULL(?, name), salary = IFNULL(?, salary) WHERE id = ?', [name, salary, id]); 
+ */
