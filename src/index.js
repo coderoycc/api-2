@@ -1,7 +1,6 @@
 import express from "express";
-import * as dotenv from "dotenv";
 import { pool } from "./db/db.js";
-dotenv.config();
+import { PORT } from './config.js';
 
 import UserRoutes from './routes/user.routes.js';
 import ServiceRoutes from './routes/service.routes.js';
@@ -26,5 +25,10 @@ app.use('/api', ServiceRoutes);
 app.use('/api',QueueRoutes);
 app.use('/api', TokenRoutes);
 
-app.listen(process.env.PORT);
-console.log("Server on port", process.env.PORT);
+app.use((req, res) => {
+  res.status(404).json({
+    message: "ENPOINT NOT FOUND"
+  })
+})
+app.listen(PORT);
+console.log("Server on port", PORT);
