@@ -11,6 +11,7 @@ export const getQueue = async (req, res) => {
   Response.error(res, new createError.NotFound(`Queue with ID ${id} not found`));
 };
 
+// metodo que nos permite obtener los valores de una Cola, devuelve todos los registros
 export const getQueues = async (req, res) => {
   //Mostramos todas las colas
   try{
